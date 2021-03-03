@@ -1,0 +1,56 @@
+﻿@model PrimeNumbersListViewModels
+@{
+    ViewData["Title"] = "Home Page";
+}
+@using MultiplicationTableWebApp.Models.ViewModels;
+@addTagHelper  MultiplicationTableWebApp.Infrastructure.*, MultiplicationTableWebApp
+
+<div class="text-center">
+    @* Prime numbers form *@
+    @using (Html.BeginForm("Index", "Home", FormMethod.Post))
+    {
+        @Html.AntiForgeryToken()
+
+        <div class="form-horizontal">
+            <div class="form-group">
+                @Html.Label("Message", "How many prime numbers do you want to calculate?", new { @class = "control-label" })
+                <div class="editor-field">
+                    @Html.EditorFor(model => model.N)
+                    <br />
+                    @Html.ValidationMessageFor(model => model.N, "", new { @class = "text-danger" })
+                </div>
+            </div>
+            <div class="form-group">
+                <input type="submit" class="btn btn-primary" value="Calculate" />
+            </div>
+        </div>
+    }
+
+    @* Table grid *@
+    @if (ViewBag.ShowTable)
+    {
+        <div page-model="@Model.PagingInfo"></div>
+        <div style="height: 800px; overflow: auto;">
+            <table class="table table-bordered table-responsive table-hover">
+                <tr>
+                    <th></th>
+                    @foreach (var p in Model.PrimeNumbers)
+                    {
+                        <th>@p</th>
+                    }
+                </tr>
+                @foreach (var dict in Model.MultiplicationTable)
+                {
+                    <tr>
+                        <th>@dict.Key</th>
+
+                        @foreach (var val in dict.Value)
+                        {
+                            <td>@val</td>
+                        }
+                    </tr>
+                }
+            </table>
+        </div>
+    }
+</div>
